@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>45% custom draw function</title>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      //Width and height
+      var w = 1000;
+      var h = 1000;
+      var padding = 10;
+      var pointCount = 500;
+      var sum = pointCountSum( pointCount);
+
+      function pointCountSum( points){
+        var dem = 0; 
+        for( var i = 1; i <= points; i++){
+          dem += i;
+        }  
+        return dem;
+      } 
+
+      var xScale = d3.scale.linear()
+                     .domain([0, w])
+                     .range([padding, w - padding]);
+      var yScale = d3.scale.linear()
+                     .domain([0, w])
+                     .range([padding, w - padding]);
+      
+      //Create SVG element
+      var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+      function draw(dataset) {
+        var circles = svg.selectAll("circle").data(dataset);
+        circles.enter()
+               .append("circle")
+               .attr("cx", function(d) { return xScale(d[0]); })
+               .attr("cy", function(d) { return yScale(d[1]); })
+               .attr("r", 1);
+      }
+      function genpoint( i) {
+        var x = i; 
+        var y = (i / sum) + i;
+        return [x, y];
+      }
+      var dataset = [];
+      for (var i = 0; i < pointCount; i++) {
+        point = genpoint( i);
+        dataset.push(point);
+      }
+      draw(dataset);
+    </script>
+  </body>
+</html>
